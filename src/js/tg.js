@@ -1,8 +1,8 @@
 // Telegram Bot Integration for PC Builder KG
 class TelegramBot {
     constructor() {
-        this.botToken = '8120040906:AAEudK2QhsXgoFWRRCoUnMzXnPUVJWEhQ7k'; // Add your bot token here
-        this.chatId = '1019797376'; // Add your chat ID here
+        this.botToken = '7741295806:AAHg0tLPpuh78_3rsfMvQ2z7nhIjcakNuQ8'; // Токен бота
+        this.chatIds = ['1019797376', '1281465204']; // Массив ID чатов
         this.webhookUrl = `https://api.telegram.org/bot${this.botToken}/sendMessage`;
         this.init();
     }
@@ -237,34 +237,36 @@ class TelegramBot {
     }
 
     async sendToTelegram(data) {
-        if (!this.botToken || !this.chatId) {
-            // If bot token is not configured, show development message
+        if (!this.botToken || !this.chatIds || this.chatIds.length === 0) {
             console.log('Telegram bot not configured. Message data:', data);
             this.showNotification('Сообщение отправлено (тестовый режим)', 'success');
             return;
         }
 
         const message = this.formatMessage(data);
-        
-        const response = await fetch(this.webhookUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                chat_id: this.chatId,
-                text: message,
-                parse_mode: 'HTML'
-            })
-        });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        // Отправляем в каждый чат по очереди
+        for (let chatId of this.chatIds) {
+            const response = await fetch(this.webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            });
 
-        const result = await response.json();
-        if (!result.ok) {
-            throw new Error(`Telegram API error: ${result.description}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            if (!result.ok) {
+                throw new Error(`Telegram API error: ${result.description}`);
+            }
         }
     }
 
