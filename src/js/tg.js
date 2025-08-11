@@ -2,7 +2,7 @@
 class TelegramBot {
     constructor() {
         this.botToken = '8120040906:AAEudK2QhsXgoFWRRCoUnMzXnPUVJWEhQ7k'; // Add your bot token here
-        this.chatId = '1281465204'; // Add your chat ID here
+        this.chatId = '1019797376'; // Add your chat ID here
         this.webhookUrl = `https://api.telegram.org/bot${this.botToken}/sendMessage`;
         this.init();
     }
@@ -50,6 +50,7 @@ class TelegramBot {
                                 <label for="budget">Бюджет (сом)</label>
                                 <select id="budget" name="budget">
                                     <option value="">Выберите бюджет</option>
+                                    <option value="<50000">Менее 50,000 сом</option>
                                     <option value="50000-100000">50,000 - 100,000 сом</option>
                                     <option value="100000-200000">100,000 - 200,000 сом</option>
                                     <option value="200000-300000">200,000 - 300,000 сом</option>
