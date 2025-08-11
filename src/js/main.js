@@ -12,6 +12,8 @@ class PCBuilder {
         this.setupSmoothScrolling();
         this.setupMobileMenu();
         this.setupHeaderScroll();
+        this.setupOnLoadAnimations();
+        this.setupScrollReveal();
     }
 
     setupEventListeners() {
@@ -185,6 +187,74 @@ class PCBuilder {
             navToggle.classList.remove('active');
             document.body.style.overflow = ''; // Restore scroll
         }
+    }
+
+    setupOnLoadAnimations() {
+        const runAnimations = () => {
+            const title = document.querySelector('.hero-title');
+            const description = document.querySelector('.hero-description');
+            const buttons = document.querySelector('.hero-buttons');
+            const mockup = document.querySelector('.pc-mockup');
+
+            if (title) {
+                title.classList.add('animate-fade-up');
+            }
+            if (description) {
+                setTimeout(() => description.classList.add('animate-fade-up', 'delay-100'), 50);
+            }
+            if (buttons) {
+                setTimeout(() => buttons.classList.add('animate-fade-up', 'delay-200'), 100);
+            }
+            if (mockup) {
+                setTimeout(() => mockup.classList.add('animate-fade-right', 'delay-150'), 80);
+            }
+
+            // Remove preload class after initial animations begin
+            setTimeout(() => {
+                document.body.classList.remove('preload');
+            }, 700);
+        };
+
+        // Kick off on next frame to ensure DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', runAnimations);
+        } else {
+            runAnimations();
+        }
+    }
+
+    setupScrollReveal() {
+        const elements = document.querySelectorAll('.portfolio-item, .section-title, .feature');
+        if (!elements.length) return;
+
+        const reveal = (el) => {
+            el.classList.add('revealed');
+        };
+
+        // Fallback for browsers without IntersectionObserver
+        if (!('IntersectionObserver' in window)) {
+            elements.forEach((el, idx) => {
+                setTimeout(() => reveal(el), idx * 100);
+            });
+            return;
+        }
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    reveal(el);
+                    obs.unobserve(el);
+                }
+            });
+        }, { 
+            threshold: 0.2, 
+            rootMargin: '0px 0px -50px 0px' 
+        });
+
+        elements.forEach(el => {
+            observer.observe(el);
+        });
     }
 }
 
