@@ -504,12 +504,20 @@ body {
     padding: 1.5rem;
     background: var(--bg-secondary);
     border-radius: 15px;
+    box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
+}
+
+.features .feature:nth-child(3) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    justify-content: center;
+    width: calc((100% - 2rem) / 2);
 }
 
 .feature:hover {
     transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-xl);
 }
 
 .feature i {

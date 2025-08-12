@@ -120,35 +120,23 @@ class TelegramBot {
     }
 
     setupModalTriggers() {
-        // Add contact button to header
-        this.addContactButtonToHeader();
-        
-        // Setup modal open/close functionality
+        // Wire up existing buttons and modal events
+        this.setupOpenButtons();
         this.setupModalEvents();
     }
 
-    addContactButtonToHeader() {
-        const navMenu = document.querySelector('.nav-menu');
-        if (navMenu && !document.querySelector('.contact-nav-btn')) {
-            const contactLi = document.createElement('li');
-            contactLi.innerHTML = `
-                <a href="#" class="btn btn-primary contact-nav-btn" id="openContactModal">
-                    <i class="fas fa-phone"></i>
-                    Контакты
-                </a>
-            `;
-            navMenu.appendChild(contactLi);
-            
-            // Add event listener for contact button
-            const contactBtn = contactLi.querySelector('.contact-nav-btn');
-            if (contactBtn) {
-                contactBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.openModal();
-                });
-            }
-        }
+    setupOpenButtons() {
+        const buttons = [
+            ...document.querySelectorAll('[data-open-contact]'),
+            ...document.querySelectorAll('#openContactModal')
+        ];
+        buttons.forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.openModal();
+            });
+        });
     }
 
     setupModalEvents() {
